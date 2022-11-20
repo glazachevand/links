@@ -1,0 +1,692 @@
+https://swiperjs.com/get-started
+https://swiperjs.com/swiper-api
+
+==================подключение=========================================
+//cdn
+<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+
+//для локального испольхзования см. ссылку с документации
+https://unpkg.com/swiper@7/
+
+//npm см. документацию
+
+==================html===============================================================================
+
+// стандарт из документации
+<!-- Slider main container -->
+<div class="swiper">
+  <!-- Additional required wrapper -->
+  <div class="swiper-wrapper">
+    <!-- Slides -->
+    <div class="swiper-slide">Slide 1</div>
+    <div class="swiper-slide">Slide 2</div>
+    <div class="swiper-slide">Slide 3</div>
+    ...
+  </div>
+  <!-- If we need pagination -->
+  <div class="swiper-pagination"></div>
+
+  <!-- If we need navigation buttons -->
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+
+  <!-- If we need scrollbar -->
+  <div class="swiper-scrollbar"></div>
+</div>
+
+-------------------------обычный слайдер из картинок-------------------------
+
+<div class="image-slider swiper-container">
+
+  <!-- Слайдер -->
+  <div class="image-slider__wrapper swiper-wrapper">
+    <div class="image-slider__slide swiper-slide">
+      <div class="image-slider__image">
+        <img src="img/01.jpg" alt="Картинка">
+      </div>
+    </div>
+    <div class="image-slider__slide swiper-slide">
+      <div class="image-slider__image">
+        <img src="img/02.jpg" alt="Картинка">
+      </div>
+    </div>
+  </div>
+  
+<!-- Добавляем если нам нужны стрелки управления -->
+<div class="swiper-button-prev"></div>
+<div class="swiper-button-next"></div>
+
+<!-- Добавляем, если нам нужна пагинация -->
+<div class="swiper-pagination"></div>
+
+--------------------------------------
+  <!-- Фракция -->
+  <div class="image-slider__fraction">
+    <div class="image-slider__current">1</div>
+    <div class="image-slider__sepparator"> / </div>
+    <div class="image-slider__total">1</div>
+  </div>
+   -->
+</div>
+
+----------------------lazy load и zoom--------------------------------------------
+
+<div class="image-slider__wrapper swiper-wrapper">
+  <div class="image-slider__slide swiper-slide">
+    <div class="image-slider__image swiper-zoom-container">
+      <img data-src="img/01.jpg" src="img/1x1.png" class="swiper-lazy" alt="Картинка">
+      <div class="swiper-lazy-preloader"></div>
+    </div>
+  </div>
+  <div class="image-slider__slide swiper-slide">
+    <div class="image-slider__image swiper-zoom-container">
+      <img data-src="img/02.jpg" src="img/1x1.png" class="swiper-lazy" alt="Картинка">
+      <div class="swiper-lazy-preloader"></div>
+    </div>
+  </div>
+</div>
+
+--------------------------Миниатюры. Превью. Thumbs-------------------------------------------------------------------
+ 
+<div class="image-mini-slider swiper-container">
+  <div class="image-mini-slider__wrapper swiper-wrapper">
+    <div class="image-mini-slider__slide swiper-slide">
+      <div class="image-mini-slider__image">
+        <img src="img/01.jpg" alt="Картинка">
+      </div>
+    </div>
+    <div class="image-mini-slider__slide swiper-slide">
+      <div class="image-mini-slider__image"><img src="img/02.jpg" alt="Картинка"></div>
+    </div>
+    <div class="image-mini-slider__slide swiper-slide">
+      <div class="image-mini-slider__image">
+        <img src="img/03.jpg" alt="Картинка">
+      </div>
+    </div>
+    <div class="image-mini-slider__slide swiper-slide">
+      <div class="image-mini-slider__image">
+        <img src="img/04.jpg" alt="Картинка">
+      </div>
+    </div>
+    <div class="image-mini-slider__slide swiper-slide">
+      <div class="image-mini-slider__image">
+        <img src="img/05.jpg" alt="Картинка">
+      </div>
+    </div>
+    <div class="image-mini-slider__slide swiper-slide">
+      <div class="image-mini-slider__image">
+        <img src="img/06.jpg" alt="Картинка">
+      </div>
+    </div>
+  </div>
+</div>
+
+==================css===============================================================================
+
+ВНИМАНИЕ: если слайдер находится внутри флексэлемента, то флексэлементу, внутри котторого находится слайдер, нужно добавить
+min-width: 0;
+
+ВНИМАНИЕ: если слайдер находится внутри первоначально скрытого объекта (н-р, таба):
+
+--------------------стандарт из документации----------------------
+.swiper {
+  width: 600px;
+  height: 300px;
+}
+
+----------обычный слайдер из картинок----------------------------------
+
+.image-slider {
+	padding: 30px 0 70px 0;
+}
+.image-slider__wrapper {
+}
+.image-slider__slide {
+}
+.image-slider__image {
+	text-align: center;
+}
+.image-slider__image img {
+	max-width: 100%;
+}
+
+/* Стрелки */
+.image-slider .swiper-button-prev::after,
+.image-slider .swiper-button-next::after {
+	color: #fff;
+	font-size: 80px;
+}
+
+/* Пагинация */
+.image-slider .swiper-pagination {
+	bottom: 30px;
+}
+
+--------------Буллеты-------------------------------
+
+.image-slider .swiper-pagination-bullet {
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	font-size: 14px;
+	background-color: #fff;
+}
+
+--------------Фракция-------------------------------
+
+.image-slider .swiper-pagination-fraction {
+	font-size: 20px;
+	color: #fff;
+}
+
+----------------Прогрессбар------------------------------
+
+.image-slider .swiper-pagination-progressbar-fill {
+	background-color: #7a956b;
+}
+
+----------------Скролл----------------------------
+
+.image-slider .swiper-scrollbar-drag {
+	cursor: pointer;
+	background-color: #7a956b;
+}
+
+----------------Автоширина-------------------------------
+
+.image-slider .swiper-slide {
+	/* width: auto; */
+}
+
+------------------Мультирядность-----------------------------
+
+.image-slider {
+	height: 700px;
+}
+.image-slider .swiper-slide {
+	height: calc((100% - 30px) / 2);
+	overflow: hidden;
+}
+
+--------------------Миниатюры (превью)-----------------------------
+.image-mini-slider {
+}
+.image-mini-slider__wrapper {
+}
+.image-mini-slider__slide {
+	opacity: 0.2;
+	transition: opacity 0.3s ease 0s;
+}
+.image-mini-slider__slide.swiper-slide-thumb-active {
+	opacity: 1;
+}
+
+.image-mini-slider__image {
+	position: relative;
+	padding: 0px 0px 30% 0px;
+	cursor: pointer;
+}
+.image-mini-slider__image img {
+	object-fit: cover;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+-------------------------------------------------------------------
+
+
+===================js=======================================================================================
+
+// стандарт из документации
+
+const swiper = new Swiper('.swiper', {
+  // Optional parameters
+  direction: 'vertical',
+  loop: true,
+
+  // If we need pagination
+  pagination: {
+    el: '.swiper-pagination',
+  },
+
+  // Navigation arrows
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+
+  // And if we need scrollbar
+  scrollbar: {
+    el: '.swiper-scrollbar',
+  },
+});
+
+-------------наш обычный слайдер--------------------------------------------
+
+// Инициализируем Swiper
+let myImageSlider = new Swiper('.image-slider', {
+
+-----------------навигация---------------------
+  // Стрелки. Классы могут быть любыми. По умолчанию стлрелки выводятся с помощью иконочного шрифта с помощью псевдоэлемента after. Значит, цвет и размер можем легко менять 
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev'
+  },
+  
+-----------------Пагинация-----------------------------
+  pagination: {
+    // контейнер для пагинации
+    el: '.swiper-pagination',
+    
+    /*------------------------
+    //Тип пагинации может быть 'bullets', 'fraction', 'progressbar' или 'custom'
+    // Тип пагинации - Буллеты
+    type: 'bullets',
+    // можем кликать по точкам
+    clickable: true, 
+    
+    // Динамические буллеты. Точки изменяют свой размер
+    dynamicBullets: true,
+    
+    // Кастомные буллеты - Кружки с номерами слайдов внутри
+    renderBullet: function (index, className) {
+      return '<span class="' + className + '">' + (index + 1) + '</span>';
+    },
+    */
+    
+    /*---------------------------
+    // Тип пагинации - Фракция. Пагинация вида 3/4
+    type: 'fraction',
+    
+    // Кастомный вывод фракции. Н-р: Фото 2 из 6
+    renderFraction: function (currentClass, totalClass) {
+      return 'Фото <span class="' + currentClass + '"></span>' +
+        ' из ' +
+        '<span class="' + totalClass + '"></span>';
+    },
+    */
+    
+    /*--------------------------
+    // тип пагинации - Прогрессбар - линия сверху слайда увеличивается
+    type: 'progressbar'
+    */
+  },
+  
+  /*--------------------------------
+  // Скролл - Ползунок снизу слайда передвигается по линии
+  scrollbar: {
+    el: '.swiper-scrollbar',
+    // Возможность перетаскивать скролл
+    draggable: true
+  },
+  */
+
+  //------общие параметры----------------------------------------------
+  // Включение/отключение перетаскивания на ПК
+  simulateTouch: true, //по умолчанию true
+  // Чувствительность свайпа. 1 - по умолчанию. При увеличении чувтвительность увеличивается
+  touchRatio: 1,
+  // Угол срабатывания свайпа/перетаскивания
+  touchAngle: 45,
+  // Курсор перетаскивания - для ПК
+  grabCursor: true,
+
+  // Переключение при клике на слайд
+  slideToClickedSlide: false,
+
+  // Навигация по хешу. Слайдам дается отдельные адреса, можно листать через браузер
+  hashNavigation: {
+    // Отслеживать состояние
+    watchState: true,
+  },
+
+  // Управление клавиатурой
+  keyboard: {
+    // Включить\выключить
+    enabled: true,
+    // Включить\выключить
+    // только когда слайдер
+    // в пределах вьюпорта
+    onlyInViewport: true,
+    // Включить\выключить
+    // управление клавишами
+    // pageUp, pageDown
+    pageUpDown: true,
+  },
+
+  // Управление колесом мыши
+  mousewheel: {
+    // Чувствительность колеса мыши
+    sensitivity: 1,
+    // Класс объекта на котором
+    // будет срабатывать прокрутка мышью.
+    //eventsTarget: ".image-slider"
+  },
+
+-----------------------размеры слайдов, число, отступы---------------------------------------------
+  // Автовысота. Высота подстраивается под контент
+  autoHeight: false,// false по умолчанию
+
+  // Количество слайдов для показа. Может быть дробным числом.
+  // Если auto, то еще нужно width: auto;
+  slidesPerView: 3,
+
+  // Отключение функционала, если слайдов меньше чем нужно
+  watchOverflow: true,
+
+  // Отступ между слайдами
+  spaceBetween: 30,
+
+  // Количество пролистываемых слайдов. Может быть дробным
+  slidesPerGroup: 1,
+
+  // Активный слайд по центру
+  centeredSlides: false,
+
+  // Стартовый слайд. Нумерация с нуля
+  initialSlide: 0,
+
+  // Мультирядность. Нужно отключить автовысоту и некоторые др. параметры. В CSS разобраться с высотой слайдов и всего блока
+  slidesPerColumn: 1,
+  autoHeight: false,
+  slidersPerVies:2,
+
+----------------------loop, свободный режим, autoplay, скорость------------------------------------
+  // Бесконечный слайдер. Скролл не будет работать. Мультирядность тоже.
+  loop: false,
+
+  // При slidesPerView: auto нужно добавить к-во дублирующих слайдов
+  // Кол-во дублирующих слайдов
+  loopedSlides: 0,
+
+  // Свободный режим. Скролл мышью
+  freeMode: true,
+
+  // Автопрокрутка
+  autoplay: {
+    // Пауза между прокруткой
+    delay: 1000,
+    // Закончить на последнем слайде
+    stopOnLastSlide: true,
+    // Отключить после ручного переключения
+    disableOnInteraction: false
+  },
+
+  // Скорость
+  speed: 800,
+
+---------------------Вертикальный слайдер----------------------------------------------
+  // Вертикальный слайдер. Скролл колесом мыши сделать!
+  direction: 'vertical',
+  freeMode: true,
+
+-----------Эффекты переключения слайдов-----------------------------------------------
+  // Листание
+  effect: 'slide',
+
+  // Cмена прозрачности
+  effect: 'fade',
+
+  // Дополнение к fade
+  fadeEffect: {
+    // Параллельная
+    // смена прозрачности
+    crossFade: true
+  },
+
+  // Переворот
+  effect: 'flip',
+
+  // Дополнение к flip
+  flipEffect: {
+    // Тень
+    slideShadows: true,
+    // Показ только активного слайда
+    limitRotation: true
+  },
+
+  // Куб. Ограничить ширину слайда
+  effect: 'cube',
+
+  // Дополнение к cube
+  cubeEffect: {
+    // Настройки тени
+    slideShadows: true,
+    shadow: true,
+    shadowOffset: 20,
+    shadowScale: 0.94
+  },
+
+  // Эффект потока
+  effect: 'coverflow',
+
+  // Дополнение к coverflow
+  coverflowEffect: {
+    // Угол
+    rotate: 20,
+    // Наложение
+    stretch: 50,
+    // Тень
+    slideShadows: true,
+  },
+
+----------------------Брейк поинты (адаптив).-----------------------------------------------
+  //  Можно задавать не все параметры! Задавать отступы, к-во слайдов и др. Mobile first
+  // Ширина экрана
+  breakpoints: {
+    320: {
+      slidesPerView: 1,
+    },
+    480: {
+      slidesPerView: 2,
+    },
+    992: {
+      slidesPerView: 3,
+    }
+  },
+
+  // Соотношение сторон
+  breakpoints: {
+    '@0.75': {
+      slidesPerView: 1,
+    },
+    '@1.00': {
+      slidesPerView: 2,
+    },
+    '@1.50': {
+      slidesPerView: 3,
+    }
+  },
+
+---------------------Lazy Loading-----------------------------------
+  // Отключить предзагрузка картинок
+  preloadImages: false,
+
+  // (подгрузка картинок). В HTML требуется класс  swiper-lazy, data-src - путь к картинке, src - путь к однопиксельной картинке
+  lazy: {
+    // Подгружать на старте переключения слайда
+    loadOnTransitionStart: false,
+    // Подгрузить предыдущую и следующую картинки
+    loadPrevNext: false,
+  },
+  // Слежка за видимыми слайдами. SlidesPerView должно быть auto или > 1
+  watchSlidesProgress: true,
+  // Добавление класса видимым слайдам
+  watchSlidesVisibility: true,
+
+-----------------Зум картинки.------------------------------------------------------------------
+  //  Требуется еще в HTML класс swiper-zoom-container, Плохо работает без галереи
+  zoom: {
+    // Макимальное увеличение
+    maxRatio: 5,
+    // Минимальное увеличение
+    minRatio: 1,
+  },
+
+-----------------Миниатюры (превью) - лента с маленькими картинками под главным слайдером-----------------------------
+  //  Требуютя еще настройки в HTML. Нужно сделать слайдер с миниатюрами с таким же количеством картинок
+  thumbs: {
+    // Свайпер с мениатюрами
+    // и его настройки
+    swiper: {
+      el: '.image-mini-slider',
+      slidesPerView: 5,
+    }
+  },
+
+-----------------Передача управления Передача управления от одного слайдера другому, но не наоборот--------------------------------------------------------
+  controller: {
+    control: myTextSlider
+  },
+
+----------------Обновить свайпер-------------------------------------------------------------
+  // при изменении элементов слайдера
+  observer: true,
+
+  // Обновить свайпер при изменении родительских элементов слайдера
+  observeParents: true,
+
+  // Обновить свайпер при изменении дочерних элементов слайда
+  observeSlideChildren: true,
+
+--------------Виртуальные слайды. Нужны, если слайды добавляются динамически. В HTML выводятся только видимые слайды--------------------------
+
+  // формирование слайдера
+  virtual: {
+    slides: (function () {
+      let slide = []
+      for (let i = 0; i < 500; i++) {
+        slide.push(`<div class="image-slider__text">Слайд №${i}</div>`);
+      }
+      return slide;
+    }()),
+  },
+
+------------------------------------Доступность. Для людей с ограниченными возможностями.-----------------------------------------------
+  a11y: {
+    // Включить/выключить
+    enabled: true,
+    // Сообщения
+    prevSlideMessage: 'Previous slide',
+    nextSlideMessage: 'Next slide',
+    firstSlideMessage: 'This is the first slide',
+    lastSlideMessage: 'This is the last slide',
+    paginationBulletMessage: 'Go to slide {{index}}',
+    notificationClass: 'swiper-notification',
+    containerMessage: '',
+    containerRoleDescriptionMessage: '',
+    itemRoleDescriptionMessage: '',
+    // и т.д.
+  },
+
+-------------------Слайдер в слайдере----------------------------------------------------
+
+new Swiper('.image-in-slider', {
+  // Курсор перетаскивания
+  grabCursor: true,
+  // Навигация
+  // пагинация, текущее положение, прогрессбар
+  pagination: {
+    el: '.swiper-pagination',
+    // Буллеты
+    clickable: true,
+  },
+  // Корректная работа
+  // перетаскивания\свайпа
+  // для дочернего слайдера
+  nested: true,
+});
+
+// Еще один слайдер
+let myTextSlider = new Swiper('.text-slider', {
+  // Количество слайдов для показа
+  slidesPerView: 3,
+  // Отступ между слайдами
+  spaceBetween: 30,
+});
+
+-----------------Передача управления от одного слайдера другому и наоборот------------------------------------------------
+
+// При синхронизации двух разделенных слайдеров сделать передачу управления от одного к другому и наоборот.
+myImageSlider.controller.control = myTextSlider;
+myTextSlider.controller.control = myImageSlider;
+*/
+
+------------------------Параллакс слайдер - фоновая картинка одна и она передвигается при пролистывании слайдов с текстом--------------------------------------------
+
+new Swiper('.parallax-slider', {
+  // Включаем параллакс
+  parallax: true,
+  // скорость переключения
+  speed: 2000,
+  // Стрелки
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev'
+  },
+});
+
+-------------Параметры--Методы--События---------------------------------------------------------
+// Параметры
+// Получение
+let qSlides = myImageSlider.slides.length;
+
+// Изменение
+myImageSlider.params.speed = 3000;
+
+// Методы
+// Обновить слайдер
+myImageSlider.update();
+
+// Переключится на слайд 2, скорость 800
+myImageSlider.slideTo(2, 800);
+
+// События - внутри слайдера
+on: {
+  // Событие инициализации
+  init: function () {
+    console.log('Слайдер запущен!');
+  },
+  // Событие смены слайда
+  slideChange: function () {
+    console.log('Слайд переключен');
+  }
+  
+// События за пределами слайдера
+// Событие смены слайда
+myImageSlider.on('slideChange', function () {
+  console.log('Слайд переключен');
+});
+
+
+
+---------------------------------Запуск автоппрокрутки при наведении---------------------------------------------
+
+let sliderBlock = document.querySelector('.image-slider');
+
+// myImageSlider  - это переменная которой присвоен слайдер
+
+sliderBlock.addEventListener("mouseenter", function (e) {
+  myImageSlider.params.autoplay.disableOnInteraction = false;
+  myImageSlider.params.autoplay.delay = 500;
+  myImageSlider.autoplay.start();
+});
+sliderBlock.addEventListener("mouseleave", function (e) {
+  myImageSlider.autoplay.stop();
+});
+
+---------------------Фракция и прогрессбар одновременно-----------------------------------------
+
+let mySliderAllSlides = document.querySelector('.image-slider__total');
+let mySliderCurrentSlide = document.querySelector('.image-slider__current');
+
+mySliderAllSlides.innerHTML = myImageSlider.slides.length;
+
+myImageSlider.on('slideChange', function () {
+  let currentSlide = ++myImageSlider.realIndex;
+  mySliderCurrentSlide.innerHTML = currentSlide;
+});

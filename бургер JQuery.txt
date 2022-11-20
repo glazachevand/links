@@ -1,0 +1,198 @@
+============================================================================
+На JQuery
+
+Бургер появляется на разрешении меньше 768px
+
+//Подключаем JQuery
+//В конце body:
+<!-- Подключаем jQuery -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<!-- Подключаем файл JS скриптов -->
+<script src="js/script.js"></script>
+
+//Заготовка HTML:
+<div class="header__body">
+  <a href="#" class="header__logo">
+    <img src="img/logo.jpg" alt="">
+  </a>
+  <div class="header__burger">
+    <span></span>
+  </div>
+  <nav class="header__menu">
+    <ul class="header__list">
+      <li>
+        <a href="#" class="header__link"></a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+//CSS
+//Фиксируем шапку
+.header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 50;
+}
+
+//Делаем плашку на весь размер шапки:
+.header:before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #5e5373;
+  z-index: 2;
+}
+
+// Делаем относительным весь контейнер и настраиваем flex
+.header__body {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  height: 80px;
+  align-items: center;
+}
+
+//Настраиваем стили для списка меню
+.header__list {
+  display: flex;
+  position: relative;
+  z-index: 2;
+}
+.header__list li{
+  list-style: none;
+  margin: 0px 0px 0px 20px;
+}
+.header__link {
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+//настраиваем логотип. Здесь пример круглого логотипа без подрезания
+.header__logo {
+  flex: 0 0 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  z-index: 3;
+}
+.header__logo img{
+  max-width: 100%;
+  display: block;
+}
+
+//настраиваем бургер видимым на разрешении меньше 767px
+.header__burger {
+  display: none;
+  @media (max-width:767px){
+    .header__burger {
+      display: block;
+      position: relative;
+      width: 30px;
+      height: 20px;
+      z-index: 3;
+    }
+  }
+}
+
+//Рисуем бургер (белый) и задаем фиксированную позицию раскрывающегося меню. Все на разрешении меньше 767px
+.header__burger span{
+  position: absolute;
+  background-color: #fff;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  top: 9px;
+  transition: all 0.3s ease 0s;
+}
+.header__burger:before,
+.header__burger:after{
+  content: '';
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  left: 0;
+  transition: all 0.3s ease 0s;
+}
+.header__burger:before{
+  top: 0;
+}
+.header__burger:after{
+  bottom: 0;
+}
+.header__menu {
+  position: fixed;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; //если меню не помещается
+  transition: all 0.3s ease 0s;
+  background-color: #18b5a4;
+  padding: 70px 10px 20px 10px;
+}
+
+//На разрешении меньше 767px располагаем пункты раскрывающегося меню друг под другом и задаем отступы
+.header__list {
+  display: block;
+}
+.header__list li{
+  margin: 0px 0px 20px 0px;
+}
+
+//JS
+//Обрабатываем клик и меню на бургер
+$(document).ready(function() {
+  $('.header__burger').click(function(event) {
+    $('.header__burger,.header__menu').toggleClass('active');
+    //При открытом меню блокирование прокрутки, так как при скролле открытого меню бургера скроллится и содержимое под ним
+    $('body').toggleClass('lock');
+  });
+});
+
+
+//CSS
+//Делаем крестик для бургера при нажатии
+.header__burger.active span{
+  transform: scale(0);
+}
+.header__burger.active:before{
+  transform:rotate(45deg);
+  top: 9px;
+}
+.header__burger.active:after{
+  transform:rotate(-45deg);
+  bottom: 9px;
+}
+
+//Для меню задаем при нажатии появление и исчезновение
+.header__menu {
+  top: -100%;
+  transition: all 0.3s ease 0s;
+}
+.header__menu.active{
+  top: 0;
+}
+
+//двигаем контент внизу при уменьшении шапки на медиа запросе
+@media (max-width:767px){
+  .content {
+    padding: 70px 0px 0px 0px;
+  }
+}
+
+//На медиа запросе блокируем прокрутку
+body.lock{
+  overflow: hidden;
+}
+
+============================================================================

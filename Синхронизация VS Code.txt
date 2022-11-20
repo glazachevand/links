@@ -1,0 +1,8 @@
+Синхронизация VS Code
+
+Обновление данных
+Ctrl-Shift-P > Sync: update/upload settings
+
+Установка на другом компьютере
+Download Public Gist
+6f1d46ca33cbb4e071dca3aa69da7c58

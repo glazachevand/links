@@ -1,0 +1,214 @@
+Верстка:
+ 
+ <section>
+    <form class="form" id="form2" action="<?php echo esc_url(admin_url( 'admin-post.php' ));?>" method="post">
+      <input type="hidden" name="action" value="rl-modal-form">
+      <div class="text-container">
+        <input type="text" class="form__name text-middle" name="user2" id="user2">
+        <label for=”user2” class="form__label">Имя</label>
+      </div>
+      <div class="text-container">
+        <input type="text" class="form__email text-middle _req" name="email2" id="email2">
+        <label for="email2" class="form__label">Email</label>
+      </div>
+      <input type="hidden" class="" name="form-post-id" value="2">
+      <button class="form__submit btn" type="submit">Отправить</button>
+    </form>
+   <a href="#form2" data-id="<?php echo $id; ?>">
+      <button class="btn">Записаться</button>
+   </a>
+    <!--  <button
+      class="like"
+      data-href="<?php echo esc_url(admin_url( 'admin-ajax.php' )); ?>"
+    >
+      <p>Нравится</p>
+      <div class="like__count">0</div>
+    </button>
+    <script>
+      window.addEventListener('load', function() {
+        const likeBtn = document.querySelector('.like');
+        try {          
+          if( !localStorage.getItem('liked') ) {
+            localStorage.setItem('liked', '');
+          }
+        } catch (e) {
+          console.log(e);
+        }
+        let haslike = false;
+        let todo = '';
+        likeBtn.addEventListener('click', () => {
+          if(!haslike) {
+            haslike = true;
+            likeBtn.style.backgroundColor = 'red';
+            todo = 'plus';
+          } else {
+            haslike = false;
+            likeBtn.style.backgroundColor = '#fff';
+            todo = 'minus';
+          }
+        });
+
+        const data = new FormData();
+        data.append('action', 'post-like');
+        data.append('todo', todo);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', likeBtn.getAttribute('data-href'));
+        xhr.send(data);
+        likeBtn.disable = true;
+        xhr.addEventListener('readystatechange', function() {
+          if(xhr.readyState !==4) return;
+          if(xhr.status === 200) {
+            likeBtn.querySelector('.like__count').innerText = xhr.responseText;
+            let lovalData = localStorage.getItem('liked');
+            if(haslike){
+              localStorage.setItem('liked', '+');
+            } else {
+              localStorage.setItem('liked', '-');
+            }
+          } else {
+            console.log(xhr.statusText);
+          }
+          likeBtn.disable = false;
+        });
+      });
+    </script>-->
+
+  </section> 
+  
+      // Регистрируем новый тип записей - Заявки
+    register_post_type( 'orders', [
+      'labels' => [
+          'name'               => __('Заявки', 'robot_lending'),
+          'singular_name'      => __('Заявка', 'robot_lending'),
+          'add_new'            => __('Добавить новую', 'robot_lending'),
+          'add_new_item'       => __('Добавить новую заявку', 'robot_lending'),
+          'edit_item'          => __('Редактировать заявку', 'robot_lending'),
+          'new_item'           => __('Новая заявка', 'robot_lending'),
+          'view_item'          => __('Смотреть заявку', 'robot_lending'),
+          'search_items'       => __('Искать заявку', 'robot_lending'),
+          'not_found'          => __('Не найдено', 'robot_lending'),
+          'not_found_in_trash' => __('Не найдено в корзине', 'robot_lending'),
+          'parent_item_colon'  => '',
+          'menu_name'          => __('Заявки', 'robot_lending'),
+      ],
+      'public'              => false,
+      'show_ui'             => true, //Определяет нужно ли создавать логику управления типом записи из админ-панели. 
+      'show_in_menu'        => true,//Показывать ли тип записи в администраторском меню и где именно показывать управление типом записи. Аргумент show_ui должен быть включен!
+      'menu_position'       => 22,
+      'menu_icon'           => 'dashicons-format-chat',
+      'hierarchical'        => false,
+      'supports'            => ['title'],
+      'has_archive' => false
+    ]);
+
+  }
+
+functions.php
+/**********************************************************************************  тесты */
+  add_action( 'add_meta_boxes', 'rl_meta_boxes');
+  function rl_meta_boxes() {
+    $fields = [
+      'rl_order_date' => 'Дата заявки',
+      'rl_order_name' => 'Имя клиента',
+      'rl_order_email' => 'email',
+      'rl_order_choice' => 'Выбор клиента' // id
+    ];
+    foreach ($fields as $slug => $text) {
+      # code...
+      add_meta_box( 
+        $slug, 
+        $text, 
+        'rl_order_fields_cb', // функция, которая отвечает за верстку поля
+        'orders',// к каким типам записей добавлять
+        'advanced',// куда вставлять - выбрали по умолчанию
+        'default',// приоритет
+        $slug // дополнительные аргументы для rl_order_fields_cb
+      );
+    }
+  }
+  function  rl_order_fields_cb( $post_obj, $slug) {
+    $slug = $slug['args'];
+    $data = '';
+    switch ($slug) {
+      case 'rl_order_date':
+        $data = $post_obj->post_date;
+        break;
+      case 'rl_order_choice':
+        $id = get_post_meta( $post_obj->ID, $slug, true );
+        $title = get_the_title( $id );
+        $data = 'Клиент выбрал <strong>' . $title. '</strong><br>';
+        //$type = get_post_type_obj(get_post_type( $id ))->labels->singular_name;// название типа записи
+        //$data = 'Клиент выбрал <strong>' . $title. '</strong><br> Из раздела <strong>'. $type. '</strong>';
+        break;
+      
+      default:
+        $data = get_post_meta( $post_obj->ID, $slug, true );
+        $data = $data ? $data : 'Нет данных';
+        break;
+    }
+    echo '<p>' . $data. '</p>';
+  }
+
+  add_action( 'admin_post_nopriv_rl-modal-form', 'rl_modal_form_handler' );
+  add_action( 'admin_post_rl-modal-form', 'rl_modal_form_handler' );
+ 
+  function rl_modal_form_handler() {
+    $name = $_POST['user2'] ? $_POST['user2'] : 'Аноним';
+    $email = $_POST['email2'] ? $_POST['email2'] : false;
+    $choice = $_POST['form-post-id'] ? $_POST['form-post-id'] : 'empty';
+    // сохраняем только, если есть email
+    if( $email ) {
+      $name = wp_strip_all_tags( $name ); //Удаляет все HTML теги из строки
+      $email = wp_strip_all_tags( $email );
+      $choice = wp_strip_all_tags( $choice);
+      //wp_slas - Добавляет слэши (\), экранирует строку или массив строк (в том числе строки всех вложенных массивов).
+      //wp_insert_post - Безопасно вставляет/обновляет запись в базе данных. Возвращает id новой записи или 0 или объект ошибки - зависит от настроек
+      $id = wp_insert_post( wp_slash( [
+        'post_title' => 'Заявка №',
+        'post_type' => 'orders',
+        'post_status' => 'publish',
+        'meta_input' => [          
+          'rl_order_name' => $name,
+          'rl_order_email' => $email,
+          'rl_order_choice' => $choice,
+        ]
+      ] )); 
+      if( $id !== 0 ){
+        wp_update_post( [
+          'ID' => $id,
+          'post_title' => 'Заявка №' . $id          
+        ] );
+        // далее добавляем поля из ACF
+        update_field( 'orders_status', 'new', $id );
+        // Здесь еще можно вызывать wp_mail();
+      }
+    }
+ 
+   header('Location: ' . home_url()); // переадресация на главную страницу
+  }
+  
+  /**********************************************************************************  тесты */
+
+ /* add_action( 'admin_post_nopriv_rl-modal-form', 'rl_modal_form_handler' );
+  add_action( 'admin_post_rl-modal-form', 'rl_modal_form_handler' );
+ 
+  function rl_modal_form_handler() {
+   echo 'все получили';
+   var_dump( $_POST );
+ 
+   header('Location: ' . home_url()); // переадресация на главную страницу
+  }
+
+  add_action( 'wp_ajax_nopriv_post-like', 'rl_likes' );
+  add_action( 'wp_ajax_post-like', 'rl_likes' );
+  function rl_likes() {
+    echo 'все получили';
+    wp_die();// остановка работы wordpress
+  }
+
+  add_action( 'manage_posts_custom_column', 'rl_like_column', 5, 2 );
+  function rl_like_column(){  }
+  add_filter( 'manage_posts_columns', 'rl_add_col_likes' );*/
+
+
+?>

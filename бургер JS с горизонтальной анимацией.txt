@@ -1,0 +1,412 @@
+============================================================================
+На чистом JS с подменю. используется mobile first. Бургер появляется на разрешении меньше 768px.
+Для touch для подменю появляется стрелка
+
+//Заготовка HTML:
+<header class="header">
+  <div class="header__container">
+    <a href="" class="header__logo"></a>
+    <div class="header__menu menu">
+      <div class="menu__icon">
+        <span></span>
+      </div>
+      <nav class="menu__body">
+        <ul class="menu__list">
+          <li><a data-goto=".page__section_1" href="#" class="menu__link">Раздел №1</a></li>
+          <li><a data-goto=".page__section_2" href="#" class="menu__link">Раздел №2</a></li>
+          <li><a data-goto=".page__section_3" href="#" class="menu__link">Раздел №3</a></li>
+          //страница с подменю
+          <li>
+            <a href="" class="menu__link">Страница №1</a>
+            <span class="menu__arrow"></span>
+            <ul class="menu__sub-list">
+              <li>
+                <a href="" class="menu__sub-link">Раздел страницы №1</a>
+              </li>
+              <li>
+                <a href="" class="menu__sub-link">Раздел страницы №2</a>
+              </li>
+              <li>
+                <a href="" class="menu__sub-link">Раздел страницы №3</a>
+              </li>
+            </ul>
+          </li>
+          //ссылка на еще одну страницу
+          <li>
+            <a href="" class="menu__link">Страница №2</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+<main class="page">
+  <section class="page__section page__section_1">
+    <h1 class="page__title">Отличная статья</h1>
+    <div class="page__text">
+      <p>Lorem </p>
+    </div>
+  </section>
+  <section class="page__section page__section_2">
+    <h2 class="page__sub-title">Отличный раздел сайта</h2>
+    <div class="page__text">
+      <p>Lorem</p>
+    </div>
+  </section>
+  <section class="page__section page__section_3">
+    <h2 class="page__sub-title">Отличный раздел сайта</h2>
+    <div class="page__text">
+      <p>Lorem</p>
+    </div>
+  </section>
+</main>
+
+//CSS
+//Фиксируем шапку header
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #912105;
+  z-index: 10;
+}
+
+//Настраиваем стили для .header__container (flex с минимальной высотой)
+.header__container {
+  max-width: 1200px;
+  margin: 0px auto;
+  display: flex;
+  padding: 0px 30px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 70px;
+}
+
+//настраиваем логотип. Здесь пример круглого логотипа без подрезания
+.header__logo {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fff;
+  z-index: 5;
+}
+
+//используем mobile first
+@media (max-width: 767px) {
+}
+
+//Настраиваем меню и подменю
+.menu__list > li {
+  position: relative;
+  margin: 0px 0px 0px 20px;
+}
+.menu__link {
+  color: #fff;
+  font-size: 18px;
+}
+.menu__sub-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #000;
+  padding: 15px;
+  min-width: 200px;
+}
+.menu__sub-list li {
+  margin: 0px 0px 10px 0px;
+}
+.menu__sub-list li:last-child {
+  margin: 0;
+}
+.menu__sub-link {
+  color: #fff;
+}
+@media (min-width: 767px) {
+  .menu__list {
+    display: flex;
+    align-items: center;
+  }
+  .menu__list > li {
+    padding: 10px 0; //Имеет значение, когда ведем мышь к подменю, чтобы не было дырки
+  }
+  //Скрываем подменю
+  .menu__sub-list {
+    transform: translate(0px, 10%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; //запрещает любое взаимодействие мыши с нашим объектом! Чтобы подменю не ловилось там, где не надо
+    transition: all 0.8s ease 0s;
+  }
+}
+
+//Сделаем подчеркивание ссылок
+.menu__link:hover {
+  text-decoration: underline;
+}
+.menu__sub-link:hover {
+  text-decoration: underline;
+}
+
+//JS Определяем используемое устройство
+const isMobile = {
+  Android: function () {
+    return navigator.userAgent.match(/Android/i);
+  },
+  BlackBerry: function () {
+    return navigator.userAgent.match(/BlackBerry/i);
+  },
+  iOS: function () {
+    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+  },
+  Opera: function () {
+    return navigator.userAgent.match(/Opera Mini/i);
+  },
+  Windows: function () {
+    return navigator.userAgent.match(/IEMobile/i);
+  },
+  any: function () {
+    return (
+      isMobile.Android() ||
+      isMobile.BlackBerry() ||
+      isMobile.iOS() ||
+      isMobile.Opera() ||
+      isMobile.Windows());
+  }
+};
+//Добавляем класс _touch или _pc.
+if (isMobile.any()) {
+  document.body.classList.add('_touch');
+  //Для всех стрелок при нажатии меняем класс _active
+  let menuArrows = document.querySelectorAll('.menu__arrow');
+  if (menuArrows.length > 0) {
+    for (let index = 0; index < menuArrows.length; index++) {
+      const menuArrow = menuArrows[index];
+      menuArrow.addEventListener("click", function (e) {
+        menuArrow.parentElement.classList.toggle('_active');
+      });
+    }
+  }
+} else {
+	document.body.classList.add('_pc');
+}
+
+//Делаем верстку для подменю на pc
+body._pc .menu__list > li:hover .menu__sub-list {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0px, 0px);
+  pointer-events: all;
+}
+
+//Делаем треугольник на touch
+body._touch .menu__arrow {
+  display: block;
+  width: 0;
+  height: 0;
+  margin: 0px 0px 0px 5px;
+  transition: transform 0.3s ease 0s;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid #fff;
+}
+
+// Добавляем для touch для надежной верстки
+body._touch .menu__list > li {
+  display: flex;
+  align-items: center;
+}
+body._touch .menu__link {
+  flex: 1 1 auto;
+}
+
+//Появление подменю на touch и поворот стрелки
+body._touch .menu__list > li._active .menu__sub-list {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0px, 0px);
+  pointer-events: all;
+}
+body._touch .menu__list > li._active .menu__arrow {
+  transform: rotate(-180deg);
+}
+
+
+//Для плавной прокрутки в HTML добавляем дата-атрибуты вида
+data-goto=".page__section_1"
+href="#"
+
+//JS 
+// Прокрутка при клике
+const menuLinks = document.querySelectorAll('.menu__link[data-goto]');
+if (menuLinks.length > 0) {
+  menuLinks.forEach(menuLink => {
+    menuLink.addEventListener("click", onMenuLinkClick);
+  });
+
+  function onMenuLinkClick(e) {
+    const menuLink = e.target;
+    //Проверяем клик по меню с дата-атрибутом и существование элемента, на который он ссылается
+    if (menuLink.dataset.goto && document.querySelector(menuLink.dataset.goto)) {
+      const gotoBlock = document.querySelector(menuLink.dataset.goto);
+      //getBoundingClientRect().top - положение
+      //pageYOffset - прокрутка
+      //document.querySelector('header').offsetHeight - высота шапки
+      const gotoBlockValue = gotoBlock.getBoundingClientRect().top + pageYOffset - document.querySelector('header').offsetHeight;
+
+      //чтобы меню закрылось
+      if (iconMenu.classList.contains('_active')) {
+        document.body.classList.remove('_lock');
+        iconMenu.classList.remove('_active');
+        menuBody.classList.remove('_active');
+      }
+
+      window.scrollTo({
+        top: gotoBlockValue,
+        behavior: "smooth"
+      });
+      e.preventDefault(); //чтобы отключить работу ссылки
+    }
+  }
+}
+
+//Бургер появляется на разрешениях менее 767px
+.menu__icon {
+  display: none;
+}
+@media (max-width:767px){
+  .menu__icon {
+    z-index: 5; //выше плашки
+    display: block;
+    position: relative;
+    width: 30px;
+    height: 18px;
+    cursor: pointer;
+  }
+//рисуем бургер
+  .menu__icon span,
+  .menu__icon::before,
+  .menu__icon::after {
+    left: 0;
+    position: absolute;
+    height: 10%;
+    width: 100%;
+    transition: all 0.3s ease 0s;
+    background-color: #fff;
+  }
+  .menu__icon::before,
+  .menu__icon::after {
+    content: "";
+  }
+  .menu__icon::before {
+    top: 0;
+  }
+  .menu__icon::after {
+    bottom: 0;
+  }
+  .menu__icon span {
+    top: 50%;
+    transform: scale(1) translate(0px, -50%);
+  }
+  .menu__icon._active span {
+    transform: scale(0) translate(0px, -50%);
+  }
+  .menu__icon._active::before {
+    top: 50%;
+    transform: rotate(-45deg) translate(0px, -50%);
+  }
+  .menu__icon._active::after {
+    bottom: 50%;
+    transform: rotate(45deg) translate(0px, 50%);
+  }
+
+//настраиваем меню и скрываем его слева
+  .menu__body {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 100px 30px 30px 30px;
+    transition: left 0.3s ease 0s; //анимируем только left, для transform не получится
+    overflow: auto;
+  }
+//появление меню
+  .menu__body._active {
+    left: 0;
+  }
+//плашка, чтобы не налезало на шапку
+  .menu__body::before {
+    content: "";
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 70px; //высота плашки
+    background-color: #912105;
+    z-index: 2; //чтобы пункты меню не налезали на плашку, меньше, чем в логотипе и иконке бургера z-index: 5;
+  }
+
+//настраиваем пункты меню и подменю
+  .menu__list > li {
+    flex-wrap: wrap; //так как li flex контейнер
+    margin: 0px 0px 30px 0px;
+  }
+  .menu__list > li:last-child {
+    margin-bottom: 0;
+  }
+  .menu__list > li._active .menu__sub-list {
+    display: block;
+  }
+  .menu__link {
+    font-size: 24px; //делаем шрифт больше
+  }
+  .menu__sub-list {
+    position: relative;
+    background-color: #fff;
+    flex: 1 1 100%; //на всю ширину flex контейнера
+    margin: 20px 0px 0px 0px;
+    display: none;
+  }
+  .menu__sub-link {
+    font-size: 20px;
+    color: #000;
+  }
+}
+
+//JS
+// Меню бургер
+const iconMenu = document.querySelector('.menu__icon');
+const menuBody = document.querySelector('.menu__body');
+if (iconMenu) {
+  iconMenu.addEventListener("click", function (e) {
+    //При открытом меню блокирование прокрутки, так как при скролле открытого меню бургера скроллится и содержимое под ним
+    document.body.classList.toggle('_lock');
+    iconMenu.classList.toggle('_active');
+    menuBody.classList.toggle('_active');
+  });
+}
+
+//CSS
+//блокируем прокрутку
+body._lock {
+  overflow: hidden;
+}
+
+//Делаем крестик для бургера при нажатии
+//скрываем среднюю полоску
+.menu__icon._active span {
+  transform: scale(0) translate(0px, -50%);
+}
+.menu__icon._active::before {
+  top: 50%;
+  transform: rotate(-45deg) translate(0px, -50%);
+}
+.menu__icon._active::after {
+  bottom: 50%;
+  transform: rotate(45deg) translate(0px, 50%);
+}
+
+============================================================================

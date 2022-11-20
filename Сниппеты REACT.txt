@@ -1,0 +1,79 @@
+===================================================
+Создание компонентов
+===================================================
+
+rafc  - import React from 'react'
+
+export const $1 = () => {
+  return <div>$0</div>
+}
+-----------------------------------------------------
+ffc-tab - Function Component
+
+function ComponentName() {
+ return ( );
+}
+export default ComponentName;
+---------------------------------------------------
+sfc-tab - Stateless Function Component (Arrow function)
+
+const ComponentName = () => {
+ return ( );
+}
+export default ComponentName;
+---------------------------------------------------
+cpf	- Class Property Function
+
+class | extends React.Component {
+  render() {
+    return <div>|</div>
+  }
+}
+export default |;
+
+===================================================
+Импорт
+===================================================
+imr - Import React
+
+import * as React from "react";
+---------------------------------------------------
+imrc - Import React / Component
+
+import * as React from "react";
+import { Component } from "react";
+---------------------------------------------------
+imrd	Import ReactDOM
+
+import ReactDOM from "react-dom";
+---------------------------------------------------
+imrs	Import React / useState
+
+import * as React from "react";
+import { useState } from "react";
+---------------------------------------------------
+imrse	Import React / useState useEffect
+
+import * as React from "react";
+import { useState, useEffect } from "react";
+
+===================================================
+Состояние
+===================================================
+ss	setState
+
+this.setState({ | : | });
+---------------------------------------------------
+ssf	Functional setState
+
+this.setState(prevState => {
+  return { | : prevState.| }
+});
+===================================================
+
+
+
+
+
+
+

@@ -1,0 +1,282 @@
+Лого, title, миниатюры и др.
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+test-wordpress
+functions.php
+/****************   logo, title   ***************************/
+if (!function_exists('test_wordpress_setup')) {
+  function test_wordpress_setup() {
+    load_theme_textdomain( 'test_wordpress', get_template_directory() . '/languages' );
+    // добавляем logo
+    add_theme_support( 'custom-logo', [
+      'height'      => 50,
+      'width'       => 130,
+      'flex-width'  => false, //true, если хотим, чтобы менялась
+      'flex-height' => false, //true, если хотим, чтобы менялась
+      'header-text' => '',
+      'unlink-homepage-logo' => false, // WP 5.5
+    ] );
+    // добавляем title
+    add_theme_support( 'title-tag');
+    // включаем миниатюры для постов и страниц
+    add_theme_support( 'post-thumbnails' );
+    set_post_thumbnail_size( 730, 480, true ); // размер миниатюры поста по умолчанию
+    // подключаем html5
+    add_theme_support( 'html5', array(
+      'comment-list',
+      'comment-form',
+      'search-form',
+      'gallery',
+      'caption',
+      'script',
+      'style',
+    ) );
+  }
+  add_action('after_setup_theme', 'test_wordpress_setup');
+}
+
+// удалим описание сайта из заголовка для главной страницы
+add_filter( 'document_title_parts', function( $title ){
+if( isset($title['tagline']) )
+  unset( $title['tagline'] );
+
+return $title;
+});
+// Удалим названия сайта в конце заголовка
+add_filter( 'document_title_parts', function( $parts ){
+
+	if( isset($parts['site']) ) unset($parts['site']);
+
+	return $parts;
+});
+
+add_filter( 'get_custom_logo_image_attributes', 'filter_logo_class' );
+function filter_logo_class($custom_logo_attr){
+  $custom_logo_attr['class'] .= ' img-fluid b-logo';
+  return $custom_logo_attr;
+}
+??????????????????????????????????
+/****************** menus ***************************/
+function test_wordpress_menus() {
+  // собираем несколько областей меню
+	$locations = array(
+		'header'  => __( 'Header Menu', 'test_wordpress' ),
+		'footer_left'  => __( 'Footer Left Menu', 'test_wordpress' ),
+		'footer_right'  => __( 'Footer Right Menu', 'test_wordpress' ),
+	);
+  // регистрируем области меню
+	register_nav_menus( $locations );
+}
+add_action( 'init', 'test_wordpress_menus' );
+
+/*// добавим класс nav-item для пунктов меню
+add_filter( 'nav_menu_css_class', 'custom_nav_menu_css_class', 10, 1 );
+// получаем список всех классов пунктов меню
+function custom_nav_menu_css_class($classes) {
+  $classes[] = 'nav-item'; // добавляем к массиву классов наш класс
+  return $classes;
+}
+
+// повесим класс nav-link на все ссылки
+add_filter( 'nav_menu_link_attributes', 'custom_nav_menu_link_attributes', 10, 1 );
+function custom_nav_menu_link_attributes ($atts) {
+  $atts['class'] = 'nav-link';
+  return $atts;
+}   */
+
+class bootstrap_4_walker_nav_menu extends Walker_Nav_menu {
+    
+  function start_lvl( &$output, $depth = 0, $args = NULL ){ // ul
+      $indent = str_repeat("\t",$depth); // indents the outputted HTML
+      $submenu = ($depth > 0) ? ' sub-menu' : '';
+      $output .= "\n$indent<ul class=\"dropdown-menu$submenu depth_$depth\">\n";
+  }
+
+function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ){ // li a span
+      
+  $indent = ( $depth ) ? str_repeat("\t",$depth) : '';
+  
+  $li_attributes = '';
+      $class_names = $value = '';
+  
+      $classes = empty( $item->classes ) ? array() : (array) $item->classes;
+      
+      $classes[] = ($args->walker->has_children) ? 'dropdown' : '';
+      $classes[] = ($item->current || $item->current_item_anchestor) ? 'active' : '';
+      $classes[] = 'nav-item';
+      $classes[] = 'nav-item-' . $item->ID;
+      if( $depth && $args->walker->has_children ){
+          $classes[] = 'dropdown-menu';
+      }
+      
+      $class_names =  join(' ', apply_filters('nav_menu_css_class', array_filter( $classes ), $item, $args ) );
+      $class_names = ' class="' . esc_attr($class_names) . '"';
+      
+      $id = apply_filters('nav_menu_item_id', 'menu-item-'.$item->ID, $item, $args);
+      $id = strlen( $id ) ? ' id="' . esc_attr( $id ) . '"' : '';
+      
+      $output .= $indent . '<li ' . $id . $value . $class_names . $li_attributes . '>';
+      
+      $attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
+      $attributes .= ! empty( $item->target ) ? ' target="' . esc_attr($item->target) . '"' : '';
+      $attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr($item->xfn) . '"' : '';
+      $attributes .= ! empty( $item->url ) ? ' href="' . esc_attr($item->url) . '"' : '';
+      
+      $attributes .= ( $args->walker->has_children ) ? ' class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"' : ' class="nav-link"';
+      
+      $item_output = $args->before;
+      $item_output .= ( $depth > 0 ) ? '<a class="dropdown-item"' . $attributes . '>' : '<a' . $attributes . '>';
+      $item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+      $item_output .= '</a>';
+      $item_output .= $args->after;
+      
+      $output .= apply_filters ( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );  
+  }  
+}
+
+// отключаем создание миниатюр файлов для указанных размеров
+add_filter( 'intermediate_image_sizes', 'delete_intermediate_image_sizes' );
+function delete_intermediate_image_sizes( $sizes ){
+	// размеры которые нужно удалить
+	return array_diff( $sizes, [
+		'medium_large',
+		'large',
+		'1536x1536',
+		'2048x2048',
+	] );
+}
+
+
+??????????????????????????????????
+в header.php
+<head>
+  ...
+  <?php wp_head(); ?>
+</head>
+
+      <div class="navbar-brand">
+        <?php
+          if( is_front_page() ) {?>
+            <img src="<?php echo get_template_directory_uri(). '/images/logo.png';?>" alt="" class="img-fluid b-logo" />
+          <?php
+          } else {
+            if (has_custom_logo()) {
+              // логотип есть
+              echo get_custom_logo();
+            }
+          }
+        ?>
+      </div>
+      
+      <div class="collapse navbar-collapse justify-content-end" id="mainNav">
+        <?php wp_nav_menu([
+          'theme_location'  => 'header',
+          'container'       => false,
+          'menu_class'      => 'navbar-nav',
+          'echo'            => true,
+          'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+          'depth'           => 2,
+          'walker'          => new bootstrap_4_walker_nav_menu(),
+        ]);
+        ?>
+      </div>
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+ronot-lending
+/****************** custom logo, title, menu  ************/
+add_action('after_setup_theme', 'robot_lending_setup');
+if (!function_exists('robot_lending_setup')) {
+  function robot_lending_setup() {
+
+    // подключаем HTML5 для WP  
+    add_theme_support( 'html5', array(
+      'comment-list',
+      'comment-form',
+      'search-form',
+      'gallery',
+      'caption',
+      'script',
+      'style',
+    ) );
+    
+    // custom logo
+    add_theme_support( 'custom-logo', [
+      'width'       => 246.7,
+      'flex-width'  => true, //true, если хотим, чтобы менялась
+      'flex-height' => true, //true, если хотим, чтобы менялась
+      'header-text' => '',
+      'unlink-homepage-logo' => false, // WP 5.5
+    ] );
+    
+    //title
+    add_theme_support( 'title-tag');
+
+    //menu
+    register_nav_menu( 'header', __( 'Header Menu', 'robot_lending' ) );
+
+    // включаем миниатюры для постов и страниц
+    add_theme_support( 'post-thumbnails' );
+  }
+}
+// custom logo
+add_filter( 'get_custom_logo_image_attributes', 'filter_logo_class' );
+function filter_logo_class($custom_logo_attr){
+  $custom_logo_attr['alt'] = 'logo';
+  return $custom_logo_attr;
+}
+add_filter( 'get_custom_logo', 'filter_function_custom_logo');
+function filter_function_custom_logo( $html ){
+	$html_class_link = preg_replace('/class="/i', 'class="header__logo ', $html, 1);  
+  return $html_class_link;
+}
+
+// ссылки в меню
+add_filter( 'nav_menu_link_attributes', 'custom_nav_menu_link_attributes', 10, 2 );
+function custom_nav_menu_link_attributes ($atts, $item) {
+  $atts['class'] = 'menu__link';
+  $order = $item->menu_order;
+  $atts['data-goto'] = '.page__section_'. $order;
+  return $atts; 
+}
+
+???????????????????????????????????????????????
+в header.php
+<html <?php language_attributes(); ?>>
+
+<head>
+  <meta charset="<?php bloginfo('charset');?>">
+  <meta name="format-detection" content="telephone=no">
+  <!-- <link rel="shortcut icon" href="favicon.ico"> -->
+  <!-- <meta name="robots" content="noindex, nofollow"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <?php wp_head(); ?>
+</head>
+
+<body>
+  <div class="wrapper">
+    <header class="header">
+      <div class="header__content _container">
+        <?php
+        if (has_custom_logo()) {
+          echo get_custom_logo();
+        }
+        ?>
+        <div class="header__menu menu">
+          <div class="menu__icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <?php wp_nav_menu( array(
+            'theme_location'  => 'header',  // (string) Расположение меню в шаблоне
+            'container'       => 'nav', 
+            'container_class' => 'menu__body', // (string) Контейнер меню. Обворачиватель ul. Указывается тег контейнера (по умолчанию в тег div)
+            'menu_class'      => 'menu__list',          // (string) class самого меню (ul тега)
+            'echo'            => true,            // (boolean) Выводить на экран или возвращать для обработки
+            'fallback_cb'     => '',
+            'items_wrap'      => '<ul class="%2$s">%3$s</ul>',
+          ) );?>
+        </div>
+      </div>
+    </header>   
+

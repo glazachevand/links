@@ -1,0 +1,6 @@
+Верстка под WORDPRESS
+
+logo
+echo get_custom_logo();
+<a href="http://robot-lending-wordpress:8888/" class="header__logo custom-logo-link" rel="home" aria-current="page"><img width="247" height="47" src="http://robot-lending-wordpress:8888/wp-content/uploads/2021/10/logo.webp" class="custom-logo" alt="logo"></a>
+

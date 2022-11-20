@@ -1,0 +1,419 @@
+Сайдбары и виджеты
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+robot-lending
+functions.php
+/****************** Подключаем, регистрируем сайдбар, виджет  ************/
+require_once(__DIR__. '/widget-contacts.php');
+
+add_action( 'widgets_init', 'register_robot_lending' );
+function register_robot_lending(){
+
+  register_sidebar( array(
+		'name'          => esc_html__('Сайдбар Контакты', 'robot_lending'),
+		'id'            => "sidebar-contacts",
+		'description'   => 'Введите контакты',
+		'class'         => 'footer__item',
+		'before_widget' => null,
+		'after_widget'  => null,
+    'before_title'  => null,
+		'after_title'   => null,
+		'before_sidebar' => '', // WP 5.6
+		'after_sidebar'  => '', // WP 5.6
+	) );
+  
+  register_widget( 'rl_widget_contacts' );
+}
+?????????????????????????????????????????????????????????????????????
+widget-contacts.php
+<?php
+class RL_Widget_CONTACTS extends WP_Widget {
+
+  public function __construct() {
+    parent:: __construct ( 
+      'rl_widget_contacts', // ID. Название класса в нижнем регистре
+      'Robot-Lending - Виджет Контакты', // Название в конфигурации, название сайта добавлено, чтобы видеть виджеты, разработанные специально для сайта
+      [
+        'name' => 'Robot-Lending - Виджет Контакты',
+        'description' => 'Вывод контактов' // описание под виджетом
+      ]
+    );
+  }
+
+  // форма в админке в виджете, сохранение изменений в админке
+  // $instance - данные, сохраненные в БД
+  // Вводим только те поля, которые переопределяем, остальная форма - в родительском виджете
+  // класс widefat - стандартная стилизация поля input в Wordpress
+  public function form( $instance ) { ?>
+    <p>
+      <label for="<?php echo $this->get_field_id('id-email'); ?>">
+        Введите email:
+      </label>
+      <input 
+        id="<?php echo $this->get_field_id('id-email'); ?>"
+        type="email"
+        name="<?php echo $this->get_field_name('email'); ?>"
+        value="<?php echo $instance['email']; ?> "
+        class="widefat" 
+      >
+    </p>
+    <p>
+      <label for="<?php echo $this->get_field_id('id-address'); ?>">
+        Введите адрес:
+      </label>
+      <input 
+        id="<?php echo $this->get_field_id('id-address'); ?>"
+        type="text"
+        name="<?php echo $this->get_field_name('address'); ?>"
+        value="<?php echo $instance['address']; ?> "
+        class="widefat" 
+      >
+    </p>
+  <?php }
+
+  // Вывод виджета во фронтенде
+  // $args - данные при регистрации сайдбара
+  public function widget( $args, $instance ) { ?>
+    <a href="mailto:<?php echo $instance['email']; ?>" class="text-middle">
+      <?php echo $instance['email']; ?>
+    </a> </br>
+    <?php
+     if($instance['address'] != '') { ?>
+      <p class="text-middle">
+        <?php echo $instance['address']; ?>
+      </p>
+     <?php 
+     }
+    ?>
+  <?php 
+  }
+
+  // Сохранение настроек виджета (очистка). Сработает перед сохранением новых данных в админке
+  public function update( $new_instance, $old_instance ) {
+    return $new_instance;
+  }
+}
+?>
+????????????????????????????????????????
+в верстке
+          <?php
+            if (is_active_sidebar('sidebar-contacts')) {
+              dynamic_sidebar( 'sidebar-contacts' );
+            }
+          ?>
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+sensive
+functions.php
+
+Виджет с социальными ссылками
+class Sensive_Widget_Social_Links extends WP_Widget {
+
+  private $socials = [
+    'facebook' => [
+      'Facebook',
+      'fab fa-facebook-f'
+      // здесь может быть код svg
+    ],
+    'twitter' => [
+      'Twitter',
+      'fab fa-twitter'      
+    ],
+    'dribbble' => [
+      'Dribbble',
+      'fab fa-dribbble'
+    ],
+    'behance' => [
+      'Behance',
+      'fab fa-behance'
+    ],
+  ];
+
+  public function __construct() {
+    parent:: __construct ( 
+      'sensive_widget_social_links', // ID. Название класса в нижнем регистре
+      'Sensive - Виджет Ссылки на социальные сети', // Название в конфигурации, название сайта добавлено, чтобы видеть виджеты, разработанные специально для сайта
+      [
+        'name' => 'Sensive - Виджет Ссылки на социальные сети',
+        'description' => 'Вывод ссылок на социальные сети' // описание под виджетом
+      ]
+    );
+  }
+
+  // форма в админке в виджете, сохранение изменений в админке
+  // $instance - данные, сохраненные в БД
+  // Вводим только те поля, которые переопределяем, остальная форма - в родительском виджете
+  // класс widefat - стандартная стилизация поля input в Wordpress
+  public function form( $instance ) { ?>
+    <p>
+      <label for="<?php echo $this->get_field_id('id-link'); ?>">
+        Введите ссылку на социальную сеть:
+      </label>
+      <input 
+        id="<?php echo $this->get_field_id('id-link'); ?>"
+        type="text"
+        name="<?php echo $this->get_field_name('link'); ?>"
+        value="<?php echo (isset($instance['link'])? $instance['link'] : ''); ?> "
+        class="widefat" 
+      >
+    </p>
+    <p>
+      <label for="<?php echo $this->get_field_id('id-slug'); ?>">
+        Выберите социальную сеть:
+      </label>
+      <select 
+        id="<?php echo $this->get_field_id('id-slug'); ?>"
+        name="<?php echo $this->get_field_name('slug'); ?>"
+        class="widefat" 
+      >
+      <?php
+         foreach( $this->socials as $slug => $social) { ?>
+           <option 
+            value="<?php echo $slug; ?>"
+            <?php selected( $instance['slug'], $slug, true); ?>
+           >
+            <?php echo $social[0]; ?>
+          </option>
+         <?php 
+         }
+         ?>
+      </select>
+    </p>
+
+  <?php }
+
+  // Вывод виджета во фронтенде
+  // $args - данные при регистрации сайдбара
+  public function widget( $args, $instance ) { 
+    $slug = $instance['slug']; 
+    $link = $instance['link'];
+    $class = $this->socials[$slug][1];
+    ?>
+    <li><a href="<?php echo $link; ?>"><i class="<?php echo $class; ?>"></i></a></li>
+  <?php 
+  }
+
+  // Сохранение настроек виджета (очистка). Сработает перед сохранением новых данных в админке
+  public function update( $new_instance, $old_instance ) {
+    return $new_instance;
+  }
+}
+
+?????????????????????????????????????????????????????????????
+Виджет iframe
+class Sensive_Widget_Iframe extends WP_Widget {
+
+  public function __construct() {
+    parent:: __construct ( 
+      'sensive_widget_iframe', // ID. Название класса в нижнем регистре
+      'Sensive - Виджет Iframe', // Название в конфигурации, название сайта добавлено, чтобы видеть виджеты, разработанные специально для сайта
+      [
+        'name' => 'Sensive - Виджет Iframe',
+        'description' => 'Вывод iframe (для карты, видео и др.)' // описание под виджетом
+      ]
+    );
+  }
+
+  // форма в админке в виджете, сохранение изменений в админке
+  // $instance - данные, сохраненные в БД
+  // Вводим только те поля, которые переопределяем, остальная форма - в родительском виджете
+  // класс widefat - стандартная стилизация поля input в Wordpress
+  public function form( $instance ) { ?>
+    <p>
+      <label for="<?php echo $this->get_field_id('id-code'); ?>">
+        Введите карту:
+      </label>
+      <textarea 
+        id="<?php echo $this->get_field_id('id-code'); ?>"
+        type="text"
+        name="<?php echo $this->get_field_name('code'); ?>"
+        value="<?php echo esc_html( $instance['code'] ); ?>"
+        class="widefat" 
+      >
+        <?php echo (isset($instance['code'])? esc_html($instance['code']) : '' ); ?>  
+      </textarea>
+    </p>
+
+  <?php }
+
+  // Вывод виджета во фронтенде
+  // $args - данные при регистрации сайдбара
+  public function widget( $args, $instance ) { 
+    echo $instance['code'];
+  }
+
+  // Сохранение настроек виджета (очистка). Сработает перед сохранением новых данных в админке
+  public function update( $new_instance, $old_instance ) {
+    return $new_instance;
+  }
+  
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+test-wordpress
+functions.php
+// регистрируем виджеты
+add_action('widgets_init', 'test_wordpress_widgets_init');
+function test_wordpress_widgets_init() {
+  register_sidebar( array(
+    'name'          => esc_html__('Blog sidebar', 'test_wordpress'),
+		'id'            => "sidebar-blog",
+		'before_widget' => '<section id="%1$s" class="sidebar-widget %2$s">',
+		'after_widget'  => "</section>",
+		'before_title'  => '<h5 class="widget-title mb-3">',
+		'after_title'   => "</h5>",
+  ));
+
+  register_sidebar( array(
+    'name'          => esc_html__('Footer text', 'test_wordpress'),
+		'id'            => "sidebar-footer-text",
+		'before_widget' => '<div class="footer-widget footer-link">',
+		'after_widget'  => "</div>",
+		'before_title'  => '<h4>',
+		'after_title'   => "</h4>",
+  ));
+
+  register_sidebar( array(
+    'name'          => esc_html__('Footer contacts', 'test_wordpress'),
+		'id'            => "sidebar-footer-contact",
+		'before_widget' => '<div class="footer-widget footer-text>',
+		'after_widget'  => "</div>",
+		'before_title'  => '<h4>',
+		'after_title'   => "</h4>",
+  ));
+
+}
+
+// регистрируем виджет файлов для скачивания
+/**
+ * Добавление нового виджета download_widget.
+ */
+class Download_Widget extends WP_Widget {
+
+	// Регистрация виджета используя основной класс
+	function __construct() {
+		// вызов конструктора выглядит так:
+		// __construct( $id_base, $name, $widget_options = array(), $control_options = array() )
+		parent::__construct(
+			'download_widget', // ID виджета, если не указать (оставить ''), то ID будет равен названию класса в нижнем регистре: download_widget
+			'Полезные файлы',
+			array( 'description' => 'Прикрепите ссылки на полезные файлы', 'classname' => 'download')
+		);
+
+		// скрипты/стили виджета, только если он активен
+		if ( is_active_widget( false, false, $this->id_base ) || is_customize_preview() ) {
+			add_action('wp_enqueue_scripts', array( $this, 'add_download_widget_scripts' ));
+			add_action('wp_head', array( $this, 'add_download_widget_style' ) );
+		}
+	}
+
+	/**
+	 * Вывод виджета во Фронт-энде
+	 *
+	 * @param array $args     аргументы виджета.
+	 * @param array $instance сохраненные данные из настроек
+	 */
+	function widget( $args, $instance ) {
+		$title = apply_filters( 'widget_title', $instance['title'] );
+		$file_name = $instance['file_name'];
+		$file = $instance['file'];
+
+		echo $args['before_widget'];
+		if ( ! empty( $title ) ) {
+			echo $args['before_title'] . $title . $args['after_title'];
+		}
+    echo '<a href="'.$file.'"><i class="fa fa-file-pdf"></i>'.$file_name.'</a>';
+		echo $args['after_widget'];
+	}
+
+	/**
+	 * Админ-часть виджета
+	 *
+	 * @param array $instance сохраненные данные из настроек
+	 */
+	function form( $instance ) {
+		$title = @ $instance['title'] ?: 'Полезные файлы';
+    $file_name = @ $instance['file_name'] ?: 'Название файла';
+    $file = @ $instance['file'] ?: 'URL файла';
+
+		?>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
+		</p>
+    <p>
+			<label for="<?php echo $this->get_field_id( 'file_name' ); ?>"><?php _e( 'File name', 'test_wordpress' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'file_name' ); ?>" name="<?php echo $this->get_field_name( 'file_name' ); ?>" type="text" value="<?php echo esc_attr( $file_name ); ?>">
+		</p>
+    <p>
+			<label for="<?php echo $this->get_field_id( 'file_' ); ?>"><?php _e( 'Link to the file', 'test_wordpress' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'file' ); ?>" name="<?php echo $this->get_field_name( 'file' ); ?>" type="text" value="<?php echo esc_attr( $file ); ?>">
+		</p>
+		<?php
+	}
+
+	/**
+	 * Сохранение настроек виджета. Здесь данные должны быть очищены и возвращены для сохранения их в базу данных.
+	 *
+	 * @see WP_Widget::update()
+	 *
+	 * @param array $new_instance новые настройки
+	 * @param array $old_instance предыдущие настройки
+	 *
+	 * @return array данные которые будут сохранены
+	 */
+	function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['file_name'] = ( ! empty( $new_instance['file_name'] ) ) ? strip_tags( $new_instance['file_name'] ) : '';
+		$instance['file'] = ( ! empty( $new_instance['file'] ) ) ? strip_tags( $new_instance['file'] ) : '';
+
+		return $instance;
+	}
+
+	// скрипт виджета
+	function add_download_widget_scripts() {
+		// фильтр чтобы можно было отключить скрипты
+		if( ! apply_filters( 'show_download_widget_script', true, $this->id_base ) )
+			return;
+
+		$theme_url = get_template_directory_uri();
+
+		//wp_enqueue_script('download_widget_script', $theme_url .'/js/download_widget_script.js' );
+	}
+
+	// стили виджета
+	function add_download_widget_style() {
+		// фильтр чтобы можно было отключить стили
+		if( ! apply_filters( 'show_download_widget_style', true, $this->id_base ) )
+			return;
+		?>
+		<style type="text/css">
+			.download_widget a{ display:inline; }
+		</style>
+		<?php
+	}
+
+}
+// конец класса Download_Widget
+
+// регистрация Download_Widget в WordPress
+add_action( 'widgets_init', 'register_download_widget' );
+function register_download_widget() {
+	register_widget( 'Download_Widget' );
+}
+
+??????????????????????????????????????????????????????
+sidebar.php<aside class="col-lg-4">
+  <?php if (!dynamic_sidebar('sidebar-blog')) :  dynamic_sidebar('sidebar-blog');
+  endif; ?>
+
+</aside>
+
+??????????????????????????????????????????????????????
+searchform.php<form role="search" method="get" id="searchform" action="<?php echo home_url( '/' ) ?>" class="searchform form-group" >
+  <input type="text" placeholder="поиск" class="form-control" value="<?php echo get_search_query() ?>" name="s" id="s" />
+  <button class="searchform-button">
+    <i class="fa fa-search"></i>
+  </button>
+</form>

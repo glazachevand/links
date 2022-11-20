@@ -1,0 +1,250 @@
+=======================================header==================================
+
+<header class="header">
+  <div class="header__container _container">
+    
+  </div>
+</header>
+
+// logo
+
+<a href="#" class="header__logo"><img src="img/logo.png" alt=""></a>
+
+//header-menu с бургером
+
+<div class="header__menu menu">
+  <div class="menu__icon icon-menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="menu__body">
+    <ul class="menu__list">
+      <li><a href="#" class="menu__link"></a></li>
+    </ul>
+  </nav>
+</div>
+
+
+=======================================forms==================================
+
+<form action="#" class="form" action="sendmail.php" method="POST">
+  <div class="form__line">
+    <label for="inp" class="form__label">Подпись поля</label>
+    <input id="inp" autocomplete="off" type="text" name="form[]" data-error="Ошибка" data-value="Подпись поля" class="input">
+  </div>
+  <div class="form__line">
+    <select name="form[]" class="form">
+      <option value="1" selected="selected">Пункт №1</option>
+      <option value="2">Пункт №2</option>
+      <option value="3">Пункт №3</option>
+      <option value="4">Пункт №4</option>
+    </select>
+  </div>
+  <div class="form__line">
+    <div class="quantity">
+      <div class="quantity__button quantity__button_plus"></div>
+      <div class="quantity__input">
+        <input autocomplete="off" type="text" name="form[]" value="1">
+      </div>
+      <div class="quantity__button quantity__button_minus"></div>
+    </div>
+  </div>
+  <div class="form__line">
+    <div class="price">
+      <div class="price__range"></div>
+      <div class="price__inputs">
+        <input id="price-start" autocomplete="off" type="text" name="form[]" class="input">
+        <input id="price-end" autocomplete="off" type="text" name="form[]" class="input">
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="form__btn btn">Задать вопрос</button>
+</form>
+
+-----------------quantity - количество товаров-------------------------
+
+<div class="quantity">
+  <div class="quantity__button quantity__button_plus"></div>
+  <div class="quantity__input">
+    <input autocomplete="off" type="text" name="form[]" value="1">
+  </div>
+  <div class="quantity__button quantity__button_minus"></div>
+</div> 
+
+-----------------range - ползунок-------------------------
+
+<div class="price">
+  <div class="price__range"></div>
+  <div class="price__inputs">
+    <input id="price-start" autocomplete="off" type="text" name="form[]" class="input">
+    <input id="price-end" autocomplete="off" type="text" name="form[]" class="input">
+  </div>
+</div>
+
+=======================================popup================================
+
+<div class="popup popup_callback">
+	<div class="popup__content">
+		<div class="popup__body">
+			<div class="popup__close"></div>
+			Lorem 
+		</div>
+	</div>
+</div>
+
+<div class="popup popup_video">
+	<div class="popup__content">
+		<div class="popup__body">
+			<div class="popup__close popup__close_video"></div>
+			<div class="popup__video _video"></div>
+		</div>
+	</div>
+</div>
+
+=====================================галерея==================================
+
+<div class="gallery-block _gallery">
+  <a href="img/01.jpg" class="gallery-block__item">
+    <img src="img/01.jpg" alt="">
+  </a>
+  <a href="img/02.jpg" class="gallery-block__item">
+    <img src="img/02.jpg" alt="">
+  </a>
+  <a href="img/03.jpg" class="gallery-block__item">
+    <img src="img/03.jpg" alt="">
+  </a>
+  <a href="img/04.jpg" class="gallery-block__item">
+    <img src="img/04.jpg" alt="">
+  </a>
+  <a href="img/05.jpg" class="gallery-block__item">
+    <img src="img/05.jpg" alt="">
+  </a>
+</div>
+
+=======================================tabs==================================
+
+<div class="tabs-block _scr-item _tabs">
+  <nav class="tabs-block__nav">
+    <div class="tabs-block__item _tabs-item _active">Таб №1</div>
+    <div class="tabs-block__item _tabs-item">Таб №2</div>
+    <div class="tabs-block__item _tabs-item">Таб №3</div>
+  </nav>
+  <div class="tabs-block__body">
+    <div class="tabs-block__block _tabs-block _active">
+      [Таб №1]content
+    </div>
+    <div class="tabs-block__block _tabs-block">
+      [Таб №2]content
+    </div>
+    <div class="tabs-block__block _tabs-block">
+      [Таб №3]content
+    </div>
+  </div>
+</div>
+
+=======================================spollers==================================
+<div class="spollers-block _scr-item _spollers _one">
+  <div class="spollers-block__item">
+    <div class="spollers-block__title _spoller">Я вопрос</div>
+    <div class="spollers-block__body">
+      Я ответ Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto ut asperiores nesciunt nobis vel nihil, quibusdam error sunt accusamus dolore quisquam architecto maiores. Qui consectetur corporis sit quae inventore culpa! Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto ut asperiores nesciunt nobis vel nihil, quibusdam error sunt accusamus dolore quisquam architecto maiores. Qui consectetur corporis sit quae inventore culpa!
+    </div>
+  </div>
+  <div class="spollers-block__item">
+    <div class="spollers-block__title _spoller">Я вопрос</div>
+    <div class="spollers-block__body">
+      Я ответ Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto ut asperiores nesciunt nobis vel nihil, quibusdam error sunt accusamus dolore quisquam architecto maiores. Qui consectetur corporis sit quae inventore culpa! Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto ut asperiores nesciunt nobis vel nihil, quibusdam error sunt accusamus dolore quisquam architecto maiores. Qui consectetur corporis sit quae inventore culpa!
+    </div>
+  </div>
+</div>
+
+=======================================footer==================================
+
+<footer class="footer">
+  <div class="footer__container _container">
+    <div class="footer__social social">
+      <a href"" class="social__item _icon-fb"></a>
+      <a href"" class="social__item _icon-insta"></a>
+      <a href"" class="social__item _icon-twitter"></a>
+    </div>  
+    <div class="footer__copy">Copyright ©2020 All rights reserved</div> 
+  </div>
+</footer>
+
+
+==============================section first-screen===========================================
+<section class="first-screen">
+  <div class="first-screen__container _container">
+    <div class="first-screen__body">
+      
+    </div>
+  </div>
+</section>
+
+
+----------------------------------CSS---------------------------------------------------------------------
+
+==================================adaptiv-value===============================
+
+@include adaptiv-value("font-size", 20, 10, 1);
+line-height: math.div(32px, 23px) * 100%;
+
+@include adaptiv-value("padding-top", 149, 30, 1);
+@include adaptiv-value("padding-bottom", 100, 30, 1);
+@include adaptiv-value("padding-right", 149, 30, 1);
+@include adaptiv-value("padding-left", 100, 30, 1);
+
+@include adaptiv-value("margin-top", 149, 30, 1);
+@include adaptiv-value("margin-bottom", 100, 30, 1);
+@include adaptiv-value("margin-right", 149, 30, 1);
+@include adaptiv-value("margin-left", 100, 30, 1);
+
+==================================адаптив картинок===============================
+._ibg {
+  position: relative;
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+==================================media=======================================
+
+@media (min-width: $md2+px) {
+}
+
+@media (max-width: $md2+px) {
+}
+
+=====================================псевдоэлементы=============================
+
+&:not(:last-child) {margin-right: 5px;}
+
+======================================transition=================================
+
+transition: all 0.3s ease 0s;
+
+====================================border========================================
+
+border: 1px solid #80A2C5;
+
+=====================================background==============================================
+
+background-color: #F2F3F5;
+background-image: url("../img/production/production-bg.jpg");
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+  
+==============================================================================================
+
+
+
+==============================================================================================
+==============================================================================================
+==============================================================================================

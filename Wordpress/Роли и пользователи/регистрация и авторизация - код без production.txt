@@ -1,0 +1,99 @@
+Фронтенд:
+
+<?php if (is_user_logged_in()) { ?>
+
+код страницы
+
+<?php } else { ?>
+  <form class="registration" action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>">
+    <input type="text" name="login" required>
+    <input type="password" name="pass" required>
+    <input type="email" name="email" required>
+    <input type="hidden" name="action" value="registration">
+    <button type="submit">Регистрация</button>
+  </form>
+
+  <form class="auth" action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>">
+    <input type="text" name="login" required>
+    <input type="password" name="pass" required>
+    <input type="hidden" name="action" value="auth">
+    <button type="submit">Войти</button>
+  </form>
+
+  <style>
+    .auth {
+      display: none;
+    }
+  </style>
+
+  <script>
+    window.onload = () => {
+      const reg = document.querySelector('.registration');
+      const auth = document.querySelector('.auth');
+
+      reg.addEventListener( 'submit', async e => {
+        e.preventDefault();
+        const data = new FormData( e.target );
+        const result = await fetch( e.target.getAttribute('action'), {
+          method: 'POST',
+          body: data
+        });
+        if( result.ok ) {
+          e.target.style.display = 'none';
+          auth.style.display = 'block';
+          let id = await result.text();
+          console.log('id :', id);
+        }
+      });
+
+      auth.addEventListener( 'submit', async e => {
+        e.preventDefault();
+        const data = new FormData( e.target );
+        const result = await fetch( e.target.getAttribute('action'), {
+          method: 'POST',
+          body: data
+        });
+        if( result.ok ) {
+          e.target.style.display = 'none';
+          let login = await result.text();
+          document.body.insertAdjacentHTML('afterbegin', `<h1>Привет, ${login}!</h1></h1>` );
+        }
+      });
+    }
+  </script>
+
+<?php }  ?>
+
+Бэкенд ()functions.php:
+
+//  регистрация пользователей
+add_action( 'init', 'rl_registration');
+function rl_registration() {
+
+}
+
+add_action( 'wp_ajax_nopriv_registration', 'rl_reg');
+function rl_reg() {
+  $log = $_POST['login'];
+  $pass = $_POST['pass'];
+  $email = $_POST['email'];
+  $res = wp_create_user($log, $pass, $email);
+  if( !is_wp_error($res) ) {
+    wp_die($res, 200);
+  } else {
+    wp_die('не получилось зарегистрироваться', 400);
+  }
+}
+
+add_action('wp_ajax_nopriv_auth', 'rl_auth');
+function rl_auth() {
+  $log = $_POST['login'];
+  $pass = $_POST['pass'];
+  $res = wp_authenticate( $log, $pass );
+  if (!is_wp_error($res)) {
+    wp_set_auth_cookie( $res->ID );
+    wp_die(get_userdata($res->ID)->user_login, 200);
+  } else {
+    wp_die('не получилось авторизоваться', 400);
+  }
+}
